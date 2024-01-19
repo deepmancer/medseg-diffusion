@@ -26,10 +26,6 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
   <i>Denoises noisy data by iteratively removing noise added at each step using the Reverse Diffusion Process.</i>
 </p>
 
-#### Reverse Diffusion Process
-The Reverse Diffusion Process involves training a UNet architecture to reconstruct the original data by accurately reversing the noise addition. This is achieved by estimating and subtracting the exact amount of noise added in each preceding step.
-
-
 
 **MedSegDiff** introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities. Following the standard implementation of Diffusion Probabilistic Models (DPM), a U-Net architecture is employed for learning. To achieve segmentation, the step estimation function (\epsilon_{\theta}) is conditioned on the raw image prior, described by:
 
@@ -76,7 +72,7 @@ To achieve segmentation, we condition the step estimation function by using a **
 
 ### Attention-like Mechanism
 
-We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
+We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for the mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?A(m_I^k,%20m_x^k)%20=%20(\text{LayerNorm}(m_I^k)%20\otimes%20\text{LayerNorm}(m_x^k))%20\otimes%20m_I^k" alt="Equation 3"/>
