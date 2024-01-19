@@ -47,21 +47,17 @@ Please find below a description of the components of the U-Net architecture that
 
 To achieve segmentation, we condition the step estimation function by using a **Dynamic Conditional Encoding** process. At step \(t\), we add the segmentation map feature embedding and the raw image embedding and send them to a UNet decoder \(D\) for reconstruction. In most conditional DPM, the conditional prior is unique given information. However, medical image segmentation is more challenging due to its ambiguous objects, where lesions or tissues are often difficult to differentiate from the background. Moreover, low-contrast image modalities such as MRI images make it even more challenging. Hence, given only a static image \(I\) as the condition for each step is hard to learn.
 
+### Attention-like Mechanism
+
 We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?A(m_I^k,%20m_x^k)%20=%20(\text{LayerNorm}(m_I^k)%20\otimes%20\text{LayerNorm}(m_x^k))%20\otimes%20m_I^k" alt="Equation 1"/>
 </p>
 
-
-
-### Attention-like Mechanism
-
-[Description of the Attention-like Mechanism]
-
 ### Fourier-space Features
 
-There is an issue with integrating the embedding of \(x_t\) as it generates additional high-frequency noise. To overcome this problem, we need to restrict the high-frequency elements in the features. We can achieve this by training an attentive (weight) map with parameters, which will be applied to the features in **Fourier space**. The following is a step-by-step explanation of this process:
+There is an issue with integrating the embedding of ({x_t}) as it generates additional high-frequency noise. To overcome this problem, we need to restrict the high-frequency elements in the features. We can achieve this by training an attentive (weight) map with parameters, which will be applied to the features in **Fourier space**. The following is a step-by-step explanation of this process:
 
 [Description of the Fourier-space Features Process]
 
