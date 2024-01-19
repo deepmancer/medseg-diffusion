@@ -1,4 +1,4 @@
-# MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model
+![image](https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/2ed101d4-a9d0-4908-9f4d-585eb1612cd7)# MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model
 > Revolutionizing Medical Image Segmentation with State-of-the-Art (SOTA) Denoising Diffusion Models (DPM) in PyTorch
 Welcome to a groundbreaking journey in medical imaging and bioinformatics with our PyTorch implementation of [MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model](https://arxiv.org/pdf/2211.00611.pdf). This repository offers a comprehensive guide and a step-by-step implementation for utilizing generative models in complex medical diagnosis segmentation tasks such as the segmentation of cancerous tumor cells in Brain MRI scans. The implementation has been meticulously designed using PyTorch and provides an in-depth understanding of advanced segmentation techniques for identifying tumor and cancer anomalies.
 
@@ -48,6 +48,13 @@ Please find below a description of the components of the U-Net architecture that
 ## 1) Dynamic Encoding Process
 
 - **FF-Parser Input**: The segmentation map is first input into the Feature Frequency Parser (FF-Parser), which helps to reduce high-frequency noise and refine the feature representation.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/0d1c9927-7fcf-46cd-bfc2-574165bdecad" alt="An illustration of FF-Parser" height="300"/>
+  <br>
+  <i>An illustration of FF-Parser. FFT denotes Fast Fourier Transform.</i>
+</p>
+
 - **Attentive Fusion**: After FF-Parser processing, the denoised feature map is combined synergistically with the prior image embeddings. An attentive-like mechanism is employed to enhance regional attention and feature saliency.
 - **Iterative Refinement**: The enriched feature map is then subject to iterative refinement through the FF-Parser and the attentive mechanism, culminating at the bottleneck phase.
 - **Bottleneck Convergence**: At this point, the processed feature map is added to the UNet encoder's outputs, resulting in an improved segmentation map that proceeds to the final encoding stage.
@@ -95,6 +102,23 @@ There is an issue with integrating the embedding of \(x_t\) as it generates addi
 </p>
 
 This FF-Parser can be regarded as a learnable version of frequency filters which are widely applied in digital image processing. Different from spatial attention, it globally adjusts the components of specific frequencies. Thus, it can learn to constrain the high-frequency component for adaptive integration.
+
+## Results
+
+From top to down are brain-tumor segmentation, opticcup segmentation, and thyroid nodule segmentation, respectively.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/542aa834-2b65-45de-80c1-628865488742" alt="An illustration of Evaluations - figure" height="300"/>
+  <br>
+  <i>The visual comparison of Top-4 general medical image segmentation methods</i>
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/33618afd-33c7-4e0b-b0bb-843c0d405362" alt="An illustration of Evaluations - table" height="300"/>
+  <br>
+  <i>The comparison of MedSegDiff with SOTA segmentation methods. The best results are denoted in <b>bold</b>.</i>
+</p>
 
 
 ## Installation
