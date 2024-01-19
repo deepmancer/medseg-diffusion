@@ -45,7 +45,8 @@ To achieve segmentation, we condition the step estimation function by using a **
 
 We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
 
-<img src="https://latex.codecogs.com/svg.latex?A%28m_I%5Ek%2C+m_x%5Ek%29+%3D+%28%5Ctext%7BLayerNorm%7D%28m_I%5Ek%29+%5Cotimes+%5Ctext%7BLayerNorm%7D%28m_x%5Ek%29%29+%5Cotimes+m_I%5Ek" alt="Equation 1"/>
+<img src="https://latex.codecogs.com/svg.latex?A(m_I^k,%20m_x^k)%20=%20(\text{LayerNorm}(m_I^k)%20\otimes%20\text{LayerNorm}(m_x^k))%20\otimes%20m_I^k" alt="Equation 1"/>
+
 
 
 ### Attention-like Mechanism
