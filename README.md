@@ -7,7 +7,7 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
 Following the standard implementation of Diffusion Probabilistic Models (DPM), a U-Net architecture is employed for learning. To achieve segmentation, the step estimation function (\epsilon_{\theta}) is conditioned on the raw image prior, described by:
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.latex?\epsilon_{\theta}(x_t,%20I,%20t)%20=%20D((E_{t}^{I}%20+%20E_{t}^{x},%20t))" />
+<img src="https://latex.codecogs.com/svg.latex?\epsilon_{\theta}(x_t,%20I,%20t)%20=%20D((E_{t}^{I}%20+%20E_{t}^{x},%20t))" alt="Equation 1"/>
 </p>
 
 where ![E_t^I](https://latex.codecogs.com/svg.latex?E_{t}^{I}) is the conditional feature embedding (the raw image embedding), and ![E_t^x](https://latex.codecogs.com/svg.latex?E_{t}^{x}) is the segmentation map feature embedding at the current step. These components are combined and forwarded to a U-Net decoder ![D](https://latex.codecogs.com/svg.latex?D) for reconstruction. The step index ![t](https://latex.codecogs.com/svg.latex?t) is integrated with the embeddings and decoder features, leveraging a shared learned lookup table.
@@ -15,7 +15,7 @@ where ![E_t^I](https://latex.codecogs.com/svg.latex?E_{t}^{I}) is the conditiona
 The loss of our model is represented by the following equation:
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.latex?\mathcal{L}%20=%20\mathbb{E}_{mask_0,\epsilon,t}[\lVert%20\epsilon%20-%20\epsilon_\theta(\sqrt{\bar{a}_t}mask_0%20+%20\sqrt{1%20-%20\bar{a}_t}\epsilon,%20I_i,t)%20\rVert^2])" />
+<img src="https://latex.codecogs.com/svg.latex?\mathcal{L}%20=%20\mathbb{E}_{mask_0,\epsilon,t}[\lVert%20\epsilon%20-%20\epsilon_\theta(\sqrt{\bar{a}_t}mask_0%20+%20\sqrt{1%20-%20\bar{a}_t}\epsilon,%20I_i,t)%20\rVert^2])" alt="Equation 2"/>
 </p>
 
 In each iteration, a random pair of raw image ![I_i](https://latex.codecogs.com/svg.latex?I_i) and segmentation label ![mask_i](https://latex.codecogs.com/svg.latex?mask_i) are sampled for training. The iteration number is sampled from a uniform distribution and ![epsilon](https://latex.codecogs.com/svg.latex?\epsilon) from a Gaussian distribution. The main architecture of the model is a modified ResUNet, which we implement with a ResNet encoder followed by a UNet decoder. ![I](https://latex.codecogs.com/svg.latex?I) and ![x_t](https://latex.codecogs.com/svg.latex?x_t) (noisy mask at the step=![t](https://latex.codecogs.com/svg.latex?t)) are encoded with two individual encoders.
@@ -52,16 +52,26 @@ To achieve segmentation, we condition the step estimation function by using a **
 We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.latex?A(m_I^k,%20m_x^k)%20=%20(\text{LayerNorm}(m_I^k)%20\otimes%20\text{LayerNorm}(m_x^k))%20\otimes%20m_I^k" alt="Equation 1"/>
+<img src="https://latex.codecogs.com/svg.latex?A(m_I^k,%20m_x^k)%20=%20(\text{LayerNorm}(m_I^k)%20\otimes%20\text{LayerNorm}(m_x^k))%20\otimes%20m_I^k" alt="Equation 3"/>
 </p>
 
 ### Fourier-space Features
 
-There is an issue with integrating the embedding of ({x_t}) as it generates additional high-frequency noise. To overcome this problem, we need to restrict the high-frequency elements in the features. We can achieve this by training an attentive (weight) map with parameters, which will be applied to the features in **Fourier space**. The following is a step-by-step explanation of this process:
+There is an issue with integrating the embedding of \(x_t\) as it generates additional high-frequency noise. To address this problem, we restrict the high-frequency elements in the features by training an attentive (weight) map with parameters, which is then applied to the features in **Fourier space**. The following is a detailed explanation of this process:
 
-[Description of the Fourier-space Features Process]
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.latex?M%20=%20\mathcal{F}[m]%20\in%20\mathbb{C}^{H%20\times%20W%20\times%20C}" alt="Equation 4"/>
+</p>
 
-This FF-Parser can be regarded as a learnable version of frequency filters which are widely applied in digital image processing. Different from the spatial attention, it globally adjusts the components of specific frequencies. Thus, it can learn to constrain the high-frequency component for adaptive integration.
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.latex?A%20\in%20\mathbb{C}^{H%20\times%20W%20\times%20C},%20\%20M'%20=%20A%20\otimes%20M%20\%20(elementwise%20\%20product)" alt="Equation 5"/>
+</p>
+
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.latex?m'%20=%20\mathcal{F}^{-1}[M']" alt="Equation 6"/>
+</p>
+
+This FF-Parser can be regarded as a learnable version of frequency filters which are widely applied in digital image processing. Different from spatial attention, it globally adjusts the components of specific frequencies. Thus, it can learn to constrain the high-frequency component for adaptive integration.
 
 ## Introduction
 MedSegDiff introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities.
