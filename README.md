@@ -139,7 +139,7 @@ This FF-Parser can be regarded as a learnable version of frequency filters which
 git clone https://github.com/alirezaheidari-cs/DiffusionMedSeg.git
 cd DiffusionMedSeg
 pip install -r requirements.txt
-
+```
 
 
 ## Citations
