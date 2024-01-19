@@ -1,8 +1,8 @@
 # MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model
 
 #### _A step-by-step Implementation of MedsegDiff paper from scratch utilizing Pytorch._
-> Revolutionizing Medical Image Segmentation with State-of-the-Art (SOTA) Denoising Diffusion Models (DPM) in PyTorch
-Welcome to a groundbreaking journey in medical imaging and bioinformatics with our PyTorch implementation of [MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model](https://arxiv.org/pdf/2211.00611.pdf). The implementation has been done using PyTorch and provides an in-depth understanding of advanced segmentation techniques for identifying tumor and cancer anomalies.
+Welcome to a groundbreaking journey in medical imaging and bioinformatics with our PyTorch implementation of [MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model](https://arxiv.org/pdf/2211.00611.pdf). MedsegDiff is the first DPM-based model for general medical image segmentation tasks.
+The implementation has been done using PyTorch and provides an in-depth understanding of advanced segmentation techniques for identifying tumor and cancer anomalies.
 
 # Method
 
