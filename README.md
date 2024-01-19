@@ -12,23 +12,6 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
   <i>An illustration of MedSegDiff. For clarity, the time step encoding is omitted in the figure.</i>
 </p>
 
-### Review Diffusion Procces
-
-#### Forward Diffusion Process
-<p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7cc2d589-2ca1-4379-aa0a-c87af109346f" alt="Forward Diffusion Process" height="150"/>
-  <br>
-  <i>Gradually transforms a segmentation label into a noisy mask sequence, converging to a Gaussian distribution as time increases.</i>
-</p>
-
-#### Reverse Diffusion Process
-<p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/ed72eee1-cc51-4504-9e7b-894a0cb224c6" alt="Reverse Diffusion Process" height="150"/>
-  <br>
-  <i>Denoises noisy data by iteratively removing noise added at each step using the Reverse Diffusion Process.</i>
-</p>
-
-
 **MedSegDiff** introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities. Following the standard implementation of Diffusion Probabilistic Models (DPM), a U-Net architecture is employed for learning. To achieve segmentation, the step estimation function (\epsilon_{\theta}) is conditioned on the raw image prior, described by:
 
 <p align="center">
@@ -44,6 +27,43 @@ The loss of our model is represented by the following equation:
 </p>
 
 In each iteration, a random pair of raw image ![I_i](https://latex.codecogs.com/svg.latex?I_i) and segmentation label ![mask_i](https://latex.codecogs.com/svg.latex?mask_i) are sampled for training. The iteration number is sampled from a uniform distribution and ![epsilon](https://latex.codecogs.com/svg.latex?\epsilon) from a Gaussian distribution. The main architecture of the model is a modified ResUNet, which we implement with a ResNet encoder followed by a UNet decoder. ![I](https://latex.codecogs.com/svg.latex?I) and ![x_t](https://latex.codecogs.com/svg.latex?x_t) (noisy mask at the step=![t](https://latex.codecogs.com/svg.latex?t)) are encoded with two individual encoders.
+
+
+Please find below a description of the components of the U-Net architecture that will be implemented for this task:
+
+### 1) Dynamic Encoding Process
+
+- **FF-Parser Input**: The segmentation map is first input into the Feature Frequency Parser (FF-Parser), which helps to reduce high-frequency noise and refine the feature representation.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/0d1c9927-7fcf-46cd-bfc2-574165bdecad" alt="An illustration of FF-Parser" height="300"/>
+  <br>
+  <i>An illustration of FF-Parser. FFT denotes Fast Fourier Transform.</i>
+</p>
+
+- **Attentive Fusion**: After FF-Parser processing, the denoised feature map is combined synergistically with the prior image embeddings. An attentive-like mechanism is employed to enhance regional attention and feature saliency.
+- **Iterative Refinement**: The enriched feature map is then subject to iterative refinement through the FF-Parser and the attentive mechanism, culminating at the bottleneck phase.
+- **Bottleneck Convergence**: At this point, the processed feature map is added to the UNet encoder's outputs, resulting in an improved segmentation map that proceeds to the final encoding stage.
+
+### 2) Time Encoding Block
+- **Sinusoidal Embedding Calculation**: This step begins with the calculation of sinusoidal timestep embeddings.
+- **Initial Processing Layers**: These embeddings are then passed through a linear layer, followed by SiLU activation, and another linear layer.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/46361efb-680b-437d-84ff-b7bf8ac58984" alt="An illustration of time embedding" height="300"/>
+</p>
+
+- **Integration into Residual Blocks**: Time features are then integrated into residual blocks. This is achieved either through straightforward spatial addition or via adaptive group normalization.
+
+### 3) Bottleneck Block
+- **Embedding Fusion**: At the core of the U-Net, this phase combines the embeddings from the UNet's encoder with those from the Dynamic Encoding, preparing them for the final encoding stage.
+
+### 4) Encoder & Decoder Blocks 
+- **Initial Convolution**: The encoder begins with separate initial convolutional layers for the mask and input image, preparing the features for downstream processing. 
+- **Residual Blocks**: As a base sub-module, we define each ResNet block as two consecutive convolutional layers with a SiLU activation in between and Group Normalization after each convolutional layer. You can use this module in Down/Up blocks. Also, by removing the residual connection, you can use this block as a convolutional network throughout the network.
+- **Attention**: This is also a sub-module consisting of a Layer Normalization, Multi-head Attention, a residual connection, a feed-forward network, and another residual connection.
+- **Time Embedding Integration**: Each residual block in the downsampling and upsampling stages integrates time embeddings.
+
 
 ## Results
 
@@ -63,45 +83,27 @@ From top to down are brain-tumor segmentation, opticcup segmentation, and thyroi
 </p>
 
 
-### Detailed Method
 
+## Review Diffusion Procces
 
-Please find below a description of the components of the U-Net architecture that will be implemented for this task:
-
-## 1) Dynamic Encoding Process
-
-- **FF-Parser Input**: The segmentation map is first input into the Feature Frequency Parser (FF-Parser), which helps to reduce high-frequency noise and refine the feature representation.
-
+### Forward Diffusion Process
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/0d1c9927-7fcf-46cd-bfc2-574165bdecad" alt="An illustration of FF-Parser" height="300"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7cc2d589-2ca1-4379-aa0a-c87af109346f" alt="Forward Diffusion Process" height="150"/>
   <br>
-  <i>An illustration of FF-Parser. FFT denotes Fast Fourier Transform.</i>
+  <i>Gradually transforms a segmentation label into a noisy mask sequence, converging to a Gaussian distribution as time increases.</i>
 </p>
 
-- **Attentive Fusion**: After FF-Parser processing, the denoised feature map is combined synergistically with the prior image embeddings. An attentive-like mechanism is employed to enhance regional attention and feature saliency.
-- **Iterative Refinement**: The enriched feature map is then subject to iterative refinement through the FF-Parser and the attentive mechanism, culminating at the bottleneck phase.
-- **Bottleneck Convergence**: At this point, the processed feature map is added to the UNet encoder's outputs, resulting in an improved segmentation map that proceeds to the final encoding stage.
-
-## 2) Time Encoding Block
-- **Sinusoidal Embedding Calculation**: This step begins with the calculation of sinusoidal timestep embeddings.
-- **Initial Processing Layers**: These embeddings are then passed through a linear layer, followed by SiLU activation, and another linear layer.
-
+### Reverse Diffusion Process
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/46361efb-680b-437d-84ff-b7bf8ac58984" alt="An illustration of time embedding" height="300"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/ed72eee1-cc51-4504-9e7b-894a0cb224c6" alt="Reverse Diffusion Process" height="150"/>
+  <br>
+  <i>Denoises noisy data by iteratively removing noise added at each step using the Reverse Diffusion Process.</i>
 </p>
 
-- **Integration into Residual Blocks**: Time features are then integrated into residual blocks. This is achieved either through straightforward spatial addition or via adaptive group normalization.
 
-## 3) Bottleneck Block
-- **Embedding Fusion**: At the core of the U-Net, this phase combines the embeddings from the UNet's encoder with those from the Dynamic Encoding, preparing them for the final encoding stage.
+## Detailed Method
 
-## 4) Encoder & Decoder Blocks 
-- **Initial Convolution**: The encoder begins with separate initial convolutional layers for the mask and input image, preparing the features for downstream processing. 
-- **Residual Blocks**: As a base sub-module, we define each ResNet block as two consecutive convolutional layers with a SiLU activation in between and Group Normalization after each convolutional layer. You can use this module in Down/Up blocks. Also, by removing the residual connection, you can use this block as a convolutional network throughout the network.
-- **Attention**: This is also a sub-module consisting of a Layer Normalization, Multi-head Attention, a residual connection, a feed-forward network, and another residual connection.
-- **Time Embedding Integration**: Each residual block in the downsampling and upsampling stages integrates time embeddings.
-
-## 1) Dynamic Encoding Process
+### Dynamic Encoding Process
 
 To achieve segmentation, we condition the step estimation function by using a **Dynamic Conditional Encoding** process. At step \(t\), we add the segmentation map feature embedding and the raw image embedding and send them to a UNet decoder \(D\) for reconstruction. In most conditional DPM, the conditional prior is unique given information. However, medical image segmentation is more challenging due to its ambiguous objects, where lesions or tissues are often difficult to differentiate from the background. Moreover, low-contrast image modalities such as MRI images make it even more challenging. Hence, given only a static image \(I\) as the condition for each step is hard to learn.
 
