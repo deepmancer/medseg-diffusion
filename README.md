@@ -10,10 +10,28 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
   <i>An illustration of MedSegDiff. For clarity, the time step encoding is omitted in the figure.</i>
 </p>
 
+### Review:
 
-**MedSegDiff** introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities.
+#### Forward Diffusion Process
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7cc2d589-2ca1-4379-aa0a-c87af109346f" alt="Forward Diffusion Process" height="100"/>
+  <br>
+  <i>Gradually transforms a segmentation label into a noisy mask sequence, converging to a Gaussian distribution as time increases.</i>
+</p>
 
-Following the standard implementation of Diffusion Probabilistic Models (DPM), a U-Net architecture is employed for learning. To achieve segmentation, the step estimation function (\epsilon_{\theta}) is conditioned on the raw image prior, described by:
+#### Reverse Diffusion Process
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/ed72eee1-cc51-4504-9e7b-894a0cb224c6" alt="Reverse Diffusion Process" height="100"/>
+  <br>
+  <i>Denoises noisy data by iteratively removing noise added at each step using the Reverse Diffusion Process.</i>
+</p>
+
+#### Reverse Diffusion Process
+The Reverse Diffusion Process involves training a UNet architecture to reconstruct the original data by accurately reversing the noise addition. This is achieved by estimating and subtracting the exact amount of noise added in each preceding step.
+
+
+
+**MedSegDiff** introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities. Following the standard implementation of Diffusion Probabilistic Models (DPM), a U-Net architecture is employed for learning. To achieve segmentation, the step estimation function (\epsilon_{\theta}) is conditioned on the raw image prior, described by:
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?\epsilon_{\theta}(x_t,%20I,%20t)%20=%20D((E_{t}^{I}%20+%20E_{t}^{x},%20t))" alt="Equation 1"/>
