@@ -41,7 +41,13 @@ Please find below a description of the components of the U-Net architecture that
 
 ## 1) Dynamic Encoding Process
 
-[Description of the Dynamic Encoding Process]
+To achieve segmentation, we condition the step estimation function by using a **Dynamic Conditional Encoding** process. At step \(t\), we add the segmentation map feature embedding and the raw image embedding and send them to a UNet decoder \(D\) for reconstruction. In most conditional DPM, the conditional prior is unique given information. However, medical image segmentation is more challenging due to its ambiguous objects, where lesions or tissues are often difficult to differentiate from the background. Moreover, low-contrast image modalities such as MRI images make it even more challenging. Hence, given only a static image \(I\) as the condition for each step is hard to learn.
+
+We will implement a dynamic conditional encoding for each step to address this issue. On one hand, the raw image contains accurate segmentation target information but is hard to differentiate from the background. On the other hand, the current-step segmentation map contains enhanced target regions but is not accurate. Therefore, integrating the current-step segmentation information \(x_t\) into the conditional raw image encoding for mutual complement is a reasonable response. To be specific, we will integrate this on the feature level by fusing conditional feature maps and image encoding features through an **attentive-like mechanism**. This process helps the model to localize and calibrate the segmentation dynamically. In particular, two feature maps are first applied layer normalization and multiplied together to get an affinity map. Then we multiply the affinity map with the condition encoding features to enhance the attentive region, which is:
+
+$$
+A(m_I^k, m_x^k) = (\text{LayerNorm}(m_I^k) \otimes \text{LayerNorm}(m_x^k)) \otimes m_I^k
+$$
 
 ### Attention-like Mechanism
 
@@ -49,9 +55,11 @@ Please find below a description of the components of the U-Net architecture that
 
 ### Fourier-space Features
 
+There is an issue with integrating the embedding of \(x_t\) as it generates additional high-frequency noise. To overcome this problem, we need to restrict the high-frequency elements in the features. We can achieve this by training an attentive (weight) map with parameters, which will be applied to the features in **Fourier space**. The following is a step-by-step explanation of this process:
+
 [Description of the Fourier-space Features Process]
 
-
+This FF-Parser can be regarded as a learnable version of frequency filters which are widely applied in digital image processing. Different from the spatial attention, it globally adjusts the components of specific frequencies. Thus, it can learn to constrain the high-frequency component for adaptive integration.
 
 ## Introduction
 MedSegDiff introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities.
