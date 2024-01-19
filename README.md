@@ -36,7 +36,7 @@ Please find below a description of the components of the U-Net architecture that
 - **FF-Parser Input**: The segmentation map is first input into the Feature Frequency Parser (FF-Parser), which helps to reduce high-frequency noise and refine the feature representation.
 
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/0d1c9927-7fcf-46cd-bfc2-574165bdecad" alt="An illustration of FF-Parser" height="300"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/0d1c9927-7fcf-46cd-bfc2-574165bdecad" alt="An illustration of FF-Parser" height="150"/>
   <br>
   <i>An illustration of FF-Parser. FFT denotes Fast Fourier Transform.</i>
 </p>
@@ -50,7 +50,7 @@ Please find below a description of the components of the U-Net architecture that
 - **Initial Processing Layers**: These embeddings are then passed through a linear layer, followed by SiLU activation, and another linear layer.
 
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/46361efb-680b-437d-84ff-b7bf8ac58984" alt="An illustration of time embedding" height="300"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/46361efb-680b-437d-84ff-b7bf8ac58984" alt="An illustration of time embedding" height="150"/>
 </p>
 
 - **Integration into Residual Blocks**: Time features are then integrated into residual blocks. This is achieved either through straightforward spatial addition or via adaptive group normalization.
