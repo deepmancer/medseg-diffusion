@@ -10,7 +10,7 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
   <i>An illustration of MedSegDiff. For clarity, the time step encoding is omitted in the figure.</i>
 </p>
 
-### Review:
+### Review Diffusion Procces:
 
 #### Forward Diffusion Process
 <p align="center">
@@ -43,6 +43,27 @@ The loss of our model is represented by the following equation:
 
 In each iteration, a random pair of raw image ![I_i](https://latex.codecogs.com/svg.latex?I_i) and segmentation label ![mask_i](https://latex.codecogs.com/svg.latex?mask_i) are sampled for training. The iteration number is sampled from a uniform distribution and ![epsilon](https://latex.codecogs.com/svg.latex?\epsilon) from a Gaussian distribution. The main architecture of the model is a modified ResUNet, which we implement with a ResNet encoder followed by a UNet decoder. ![I](https://latex.codecogs.com/svg.latex?I) and ![x_t](https://latex.codecogs.com/svg.latex?x_t) (noisy mask at the step=![t](https://latex.codecogs.com/svg.latex?t)) are encoded with two individual encoders.
 
+## Results
+
+From top to down are brain-tumor segmentation, opticcup segmentation, and thyroid nodule segmentation, respectively.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/542aa834-2b65-45de-80c1-628865488742" alt="An illustration of Evaluations - figure" height="300"/>
+  <br>
+  <i>The visual comparison of Top-4 general medical image segmentation methods</i>
+</p>
+
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/33618afd-33c7-4e0b-b0bb-843c0d405362" alt="An illustration of Evaluations - table" height="300"/>
+  <br>
+  <i>The comparison of MedSegDiff with SOTA segmentation methods. The best results are denoted in <b>bold</b>.</i>
+</p>
+
+
+### Detailed Method
+
+
 Please find below a description of the components of the U-Net architecture that will be implemented for this task:
 
 ## 1) Dynamic Encoding Process
@@ -62,6 +83,11 @@ Please find below a description of the components of the U-Net architecture that
 ## 2) Time Encoding Block
 - **Sinusoidal Embedding Calculation**: This step begins with the calculation of sinusoidal timestep embeddings.
 - **Initial Processing Layers**: These embeddings are then passed through a linear layer, followed by SiLU activation, and another linear layer.
+
+<p align="center">
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/46361efb-680b-437d-84ff-b7bf8ac58984" alt="An illustration of time embedding" height="300"/>
+</p>
+
 - **Integration into Residual Blocks**: Time features are then integrated into residual blocks. This is achieved either through straightforward spatial addition or via adaptive group normalization.
 
 ## 3) Bottleneck Block
@@ -71,7 +97,7 @@ Please find below a description of the components of the U-Net architecture that
 - **Initial Convolution**: The encoder begins with separate initial convolutional layers for the mask and input image, preparing the features for downstream processing. 
 - **Residual Blocks**: As a base sub-module, we define each ResNet block as two consecutive convolutional layers with a SiLU activation in between and Group Normalization after each convolutional layer. You can use this module in Down/Up blocks. Also, by removing the residual connection, you can use this block as a convolutional network throughout the network.
 - **Attention**: This is also a sub-module consisting of a Layer Normalization, Multi-head Attention, a residual connection, a feed-forward network, and another residual connection.
-- **Time Embedding Integration**: Each residual block in the downsampling and upsampling stages integrate time embeddings.
+- **Time Embedding Integration**: Each residual block in the downsampling and upsampling stages integrates time embeddings.
 
 ## 1) Dynamic Encoding Process
 
@@ -102,23 +128,6 @@ There is an issue with integrating the embedding of \(x_t\) as it generates addi
 </p>
 
 This FF-Parser can be regarded as a learnable version of frequency filters which are widely applied in digital image processing. Different from spatial attention, it globally adjusts the components of specific frequencies. Thus, it can learn to constrain the high-frequency component for adaptive integration.
-
-## Results
-
-From top to down are brain-tumor segmentation, opticcup segmentation, and thyroid nodule segmentation, respectively.
-
-<p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/542aa834-2b65-45de-80c1-628865488742" alt="An illustration of Evaluations - figure" height="300"/>
-  <br>
-  <i>The visual comparison of Top-4 general medical image segmentation methods</i>
-</p>
-
-
-<p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/33618afd-33c7-4e0b-b0bb-843c0d405362" alt="An illustration of Evaluations - table" height="300"/>
-  <br>
-  <i>The comparison of MedSegDiff with SOTA segmentation methods. The best results are denoted in <b>bold</b>.</i>
-</p>
 
 
 ## Installation
