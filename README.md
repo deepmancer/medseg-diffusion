@@ -5,7 +5,7 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
 # Method
 
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7e24a41f-ab2b-42d0-a757-0143f825a0a1" alt="image" height="250"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7e24a41f-ab2b-42d0-a757-0143f825a0a1" alt="image" height="300"/>
 </p>
 
 **MedSegDiff** introduces the first diffusion probabilistic model tailored for general medical image segmentation. Leveraging dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) which learns a Fourier-space feature space, the model remarkably enhances segmentation accuracy in diverse medical imaging modalities.
