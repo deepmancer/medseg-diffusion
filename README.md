@@ -14,14 +14,14 @@ Welcome to a groundbreaking journey in medical imaging and bioinformatics with o
 
 #### Forward Diffusion Process
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7cc2d589-2ca1-4379-aa0a-c87af109346f" alt="Forward Diffusion Process" height="100"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/7cc2d589-2ca1-4379-aa0a-c87af109346f" alt="Forward Diffusion Process" height="200"/>
   <br>
   <i>Gradually transforms a segmentation label into a noisy mask sequence, converging to a Gaussian distribution as time increases.</i>
 </p>
 
 #### Reverse Diffusion Process
 <p align="center">
-  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/ed72eee1-cc51-4504-9e7b-894a0cb224c6" alt="Reverse Diffusion Process" height="100"/>
+  <img src="https://github.com/alirezaheidari-cs/MedSegDiffusion/assets/59364943/ed72eee1-cc51-4504-9e7b-894a0cb224c6" alt="Reverse Diffusion Process" height="200"/>
   <br>
   <i>Denoises noisy data by iteratively removing noise added at each step using the Reverse Diffusion Process.</i>
 </p>
