@@ -1,6 +1,6 @@
 # MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model
 > Revolutionizing Medical Image Segmentation with State-of-the-Art Diffusion Models in PyTorch
-This is a PyTorch implementation of MedSegDiff, MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model. The implementation has been built from scratch using the PyTorch framework.  
+This is a PyTorch implementation of MedSegDiff, [MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model](https://arxiv.org/pdf/2211.00611.pdf). The implementation has been built from scratch using the PyTorch framework.  
 
 This repository offers a complete guide from dataset preparation to model training and evaluation, focusing on the brain tumor segmentation task in MRI images, optic cup segmentation in fundus images, and thyroid nodule segmentation in ultrasound images.
 
