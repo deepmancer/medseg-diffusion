@@ -124,6 +124,10 @@ If you find this work helpful, please consider citing the following papers:
 }
 ```
 
+## 📝 License
+
+This project is licensed under the MIT License. For detailed information, please refer to the [LICENSE](LICENSE) file.
+
 ---
 
 We hope this repository aids your research and development in medical image segmentation. Feel free to contribute or raise issues. Let's advance medical technology together! 💡
