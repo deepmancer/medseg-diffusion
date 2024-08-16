@@ -1,5 +1,12 @@
 # MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model 🚀
 
+<p align="center">
+  <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white" alt="PyTorch">
+  <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python">
+  <img src="https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white" alt="Jupyter Notebook">
+</p>
+<p align="center">
+
 Welcome to **MedSegDiff** — a pioneering step in medical imaging and bioinformatics! This project provides a comprehensive, step-by-step implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf) from scratch using PyTorch. MedSegDiff stands out as the first Diffusion Probabilistic Model (DPM) specifically designed for general medical image segmentation tasks, setting a new standard in the identification of tumor and cancer anomalies.
 
 ## 📖 Overview
