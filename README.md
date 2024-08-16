@@ -7,7 +7,9 @@
 </p>
 <p align="center">
 
-Welcome to **MedSegDiff** — a pioneering step in medical imaging and bioinformatics! This project provides a comprehensive, step-by-step implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf) from scratch using PyTorch. MedSegDiff stands out as the first Diffusion Probabilistic Model (DPM) specifically designed for general medical image segmentation tasks, setting a new standard in the identification of tumor and cancer anomalies.
+Welcome to **MedSegDiff** — This project provides a step-by-step implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf) paper from scratch using PyTorch. MedSegDiff stands out as the first Diffusion Probabilistic Model (DPM) specifically designed for general medical image segmentation tasks, setting a new standard in the identification of tumor and cancer anomalies.
+
+---
 
 ## 📖 Overview
 
