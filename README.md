@@ -29,7 +29,7 @@ At its core, MedSegDiff utilizes a U-Net architecture for learning and segmentat
 <img src="https://latex.codecogs.com/svg.latex?\epsilon_{\theta}(x_t,%20I,%20t)%20=%20D((E_{t}^{I}%20+%20E_{t}^{x},%20t))" alt="Equation 1"/>
 </p>
 
-Here, \(\mathbf{E_t^I}\) represents the conditional feature embedding (raw image embedding), and \(\mathbf{E_t^x}\) is the segmentation map feature embedding at the current step. These embeddings are combined and processed through a U-Net decoder for reconstruction. The process is governed by the loss function:
+Here, \( \mathbf{E_t^I} \) represents the conditional feature embedding (raw image embedding), and \( \mathbf{E_t^x} \) is the segmentation map feature embedding at the current step. These embeddings are combined and processed through a U-Net decoder for reconstruction. The process is governed by the loss function:
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}%20=%20\mathbb{E}_{mask_0,\epsilon,t}[\lVert%20\epsilon%20-%20\epsilon_\theta(\sqrt{\bar{a}_t}mask_0%20+%20\sqrt{1%20-%20\bar{a}_t}\epsilon,%20I_i,t)%20\rVert^2])" alt="Equation 2"/>
