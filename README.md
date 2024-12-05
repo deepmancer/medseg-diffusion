@@ -140,4 +140,6 @@ This project is licensed under the MIT License. For detailed information, please
 
 ---
 
-We hope this repository aids your research and development in medical image segmentation. Feel free to contribute or raise issues. Let's advance medical technology together! 💡
+## ⭐ Support the Project
+
+If this project helps or inspires you, please give it a ⭐ on GitHub! Your support makes a difference.
