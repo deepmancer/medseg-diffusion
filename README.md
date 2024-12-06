@@ -1,120 +1,211 @@
-# MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Model 🚀
-
+# MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Models 🚀
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white" alt="PyTorch">
-  <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python">
-  <img src="https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white" alt="Jupyter Notebook">
+  <img src="https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white" alt="PyTorch Badge">
+  <img src="https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=Python&logoColor=ffdd54" alt="Python Badge">
+  <img src="https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white" alt="Jupyter Notebook Badge">
+  <img src="https://img.shields.io/github/license/deepmancer/medseg-diffusion?style=for-the-badge" alt="License Badge">
+  <img src="https://img.shields.io/github/stars/deepmancer/medseg-diffusion?style=for-the-badge" alt="GitHub Stars Badge">
 </p>
-<p align="center">
 
-Welcome to **MedSegDiff**—a step-by-step implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf) from scratch using PyTorch. MedSegDiff is the first Diffusion Probabilistic Model (DPM) specifically designed for general medical image segmentation tasks, setting a new standard in the identification and segmentation of tumors and cancer anomalies.
+**MedSegDiff** is a comprehensive PyTorch implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf), presenting the first Diffusion Probabilistic Model (DPM) designed specifically for general medical image segmentation tasks. This repository aims to provide researchers and practitioners with a clear, step-by-step codebase and documentation to facilitate understanding and application of MedSegDiff across various medical imaging modalities.
 
 ---
 
-## 📖 Overview
+## 🌟 Key Features
 
-**MedSegDiff** leverages Diffusion Probabilistic Models (DPM) to advance medical image segmentation. By integrating dynamic conditional encoding and a novel Feature Frequency Parser (FF-Parser) that operates in the Fourier domain, this model significantly improves segmentation accuracy across various medical imaging modalities.
+- **General Medical Image Segmentation**: Tailored to handle diverse medical imaging tasks, including segmentation of brain tumors, optic cups, and thyroid nodules.
+- **Dynamic Conditional Encoding**: Implements step-wise adaptive conditions to enhance regional attention during diffusion.
+- **Feature Frequency Parser (FF-Parser)**: Leverages Fourier domain operations to reduce high-frequency noise, improving segmentation quality.
+- **From-Scratch Implementation**: Offers a clean and well-documented PyTorch codebase for easy learning and experimentation.
+- **Community-Friendly**: Welcomes contributions, issues, and discussions to foster community engagement.
 
-## ⚙️ Methodology
+---
+
+## 📖 Table of Contents
+
+- MedSegDiff: Medical Image Segmentation with Diffusion Probabilistic Models 🚀
+  - 🌟 Key Features
+  - 📖 Table of Contents
+  - 🔍 Overview
+  - 🛠️ Methodology
+    - 🔧 Dynamic Conditional Encoding
+    - ⏳ Time Encoding Block
+    - 🏗️ Encoder & Decoder Blocks
+    - 🔄 Diffusion Process (Forward & Reverse)
+      - 🟢 Forward Diffusion
+      - 🔴 Reverse Diffusion
+  - 🎯 Results
+  - 🚀 Installation & Usage
+  - 📁 Repository Structure
+  - 📝 License
+  - 🙏 Acknowledgments
+  - 🌟 Support the Project
+  - 📚 Citations
+
+---
+
+## 🔍 Overview
+
+**MedSegDiff** addresses a fundamental challenge in medical imaging: achieving accurate and robust segmentation across various imaging modalities. Building upon the principles of Diffusion Probabilistic Models (DPMs), MedSegDiff introduces innovative techniques like dynamic conditional encoding and the Feature Frequency Parser (FF-Parser) to enhance the model's ability to focus on critical regions, reduce high-frequency noise, and achieve state-of-the-art segmentation results.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/model_overview.png" alt="MedSegDiff Overview" height="300"/>
   <br>
-  <i>An illustration of MedSegDiff. The time step encoding is omitted for clarity.</i>
+  <i>An overview of the MedSegDiff architecture. The time step encoding component is omitted for clarity.</i>
 </p>
 
-At its core, MedSegDiff utilizes a U-Net architecture for learning and segmentation tasks. The step estimation function is conditioned on the raw image prior, described by:
-
+Formally, at each diffusion step, the model estimates:
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?\epsilon_{\theta}(x_t,%20I,%20t)%20=%20D((E_{t}^{I}%20+%20E_{t}^{x},%20t))" alt="Equation 1"/>
 </p>
 
-Here, $\mathbf{E_t^I}$ represents the conditional feature embedding (raw image embedding), and $\mathbf{E_t^x}$ is the segmentation map feature embedding at the current step. These embeddings are combined and processed through a U-Net decoder for reconstruction. The process is governed by the loss function:
+Here:
+- $\mathbf{E_t^I}$: Conditional feature embedding from the input image.
+- $\mathbf{E_t^x}$: Feature embedding of the evolving segmentation mask.
+- $D$: A U-Net decoder guiding reconstruction.
 
+The training objective:
 <p align="center">
 <img src="https://latex.codecogs.com/svg.latex?\mathcal{L}%20=%20\mathbb{E}_{mask_0,\epsilon,t}[\lVert%20\epsilon%20-%20\epsilon_\theta(\sqrt{\bar{a}_t}mask_0%20+%20\sqrt{1%20-%20\bar{a}_t}\epsilon,%20I_i,t)%20\rVert^2])" alt="Equation 2"/>
 </p>
 
-The architecture primarily employs a modified ResUNet, integrating a ResNet encoder with a UNet decoder, offering enhanced segmentation capabilities through its innovative design.
+This loss encourages the model to accurately predict the noise added at each step, ultimately guiding the segmentation toward a clean, high-quality mask.
 
-### 🧠 Dynamic Encoding Process
+---
 
-1. **FF-Parser Input**: The segmentation map undergoes initial processing through the Feature Frequency Parser (FF-Parser), which refines feature representation by reducing high-frequency noise.
+## 🛠️ Methodology
+
+MedSegDiff employs a U-Net-based architecture enriched with diffusion steps, dynamic conditional encoding, and Fourier-based noise reduction. The key idea is to iteratively refine a noisy segmentation map into a clean, accurate mask using reverse diffusion steps guided by learned conditioning from the original image.
+
+### 🔧 Dynamic Conditional Encoding
+
+1. **Feature Frequency Parser (FF-Parser)**: The segmentation map first passes through the FF-Parser, which utilizes Fourier transforms to filter out high-frequency noise components, thereby refining the feature representation.
 
    <p align="center">
      <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/ff_parser.png" alt="FF-Parser Illustration" height="220"/>
      <br>
-     <i>Illustration of the FF-Parser. FFT denotes Fast Fourier Transform.</i>
+     <i>The FF-Parser integrates FFT-based denoising before feature fusion.</i>
    </p>
 
-2. **Attentive Fusion**: The denoised feature map is then combined with prior image embeddings using an attentive-like mechanism to enhance regional attention and feature saliency.
+2. **Attentive Fusion**: The denoised feature map is then fused with the image embeddings through an attentive mechanism, enhancing regional attention and improving segmentation precision.
 
-3. **Iterative Refinement**: This enriched feature map undergoes further refinement, culminating at the bottleneck phase.
+3. **Iterative Refinement**: This combined feature undergoes further refinement, culminating in a bottleneck phase that integrates with encoder features.
 
-4. **Bottleneck Convergence**: Finally, the processed feature map is integrated with the U-Net encoder's outputs, resulting in an improved segmentation map.
+4. **Bottleneck Integration**: The refined features merge with the encoder outputs, resulting in the final segmentation mask.
 
 ### ⏳ Time Encoding Block
 
-- **Sinusoidal Embedding Calculation**: Sinusoidal timestep embeddings are calculated and passed through a linear layer, followed by SiLU activation, and another linear layer.
+- **Sinusoidal Embeddings**: Timestep embeddings are computed using sinusoidal functions, capturing temporal information of the diffusion process.
+- **Integration into Residual Blocks**: These time features are injected into the model's residual blocks, providing temporal context at each diffusion step.
 
-   <p align="center">
-     <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/time_pe.png" alt="Time Embedding Illustration" height="200"/>
-   </p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/time_pe.png" alt="Time Embedding Illustration" height="200"/>
+</p>
 
-- **Integration into Residual Blocks**: Time features are integrated into residual blocks, enhancing the overall model architecture.
+### 🏗️ Encoder & Decoder Blocks
 
-### 🛠️ Encoder & Decoder Blocks
+- **Initial Convolutions**: Separate initial convolutional layers process the input image and the segmentation mask.
+- **Residual Blocks**: The backbone consists of ResNet-like blocks with convolutional layers, GroupNorm, and activation functions.
+- **Attention Mechanisms**: Multi-head attention modules are incorporated to enhance spatial focus on critical regions.
 
-- **Initial Convolution**: Separate initial convolutional layers process the mask and input image, preparing them for downstream tasks.
-  
-- **Residual Blocks**: Each ResNet block, defined by two consecutive convolutional layers with SiLU activation and Group Normalization, is employed throughout the network. Removing the residual connection transforms this block into a basic convolutional network.
+### 🔄 Diffusion Forward & Reverse Processes (Review)
 
-- **Attention Mechanism**: A sub-module combining Layer Normalization, Multi-head Attention, residual connections, and a feed-forward network, all crucial for precise segmentation.
+#### 🟢 Forward Diffusion
 
-### 🔄 Review of Diffusion Process
+In the forward diffusion process, Gaussian noise is progressively added to the segmentation mask over a series of timesteps, degrading it into pure noise.
 
-- **Forward Diffusion Process**: Gradually transforms a segmentation label into a noisy mask sequence, converging to a Gaussian distribution as time increases.
+1. **Noise Addition**: Starting from the original segmentation mask $\text{mask}_0$, Gaussian noise is added iteratively at each timestep $t$, controlled by a variance schedule $\beta_t$.
 
-   <p align="center">
-     <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/diff_forward.png" alt="Forward Diffusion Process" height="150"/>
-   </p>
+2. **Progressive Degradation**: This process produces a sequence of increasingly noisy masks $\text{mask}_0, \text{mask}_1, \dots, \text{mask}_T$.
 
-- **Reverse Diffusion Process**: Iteratively denoises the noisy data, removing the noise added at each step using the Reverse Diffusion Process.
+3. **Convergence to Noise**: As $T \to \infty$, the mask becomes indistinguishable from pure Gaussian noise.
 
-   <p align="center">
-     <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/diff_reverse.png" alt="Reverse Diffusion Process" height="150"/>
-   </p>
+<p align="center">
+    <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/diff_forward.png" alt="Forward Diffusion Process" height="150"/>
+</p>
+
+#### 🔴 Reverse Diffusion
+
+The reverse diffusion process aims to reconstruct the original segmentation mask from the noisy data by iteratively denoising.
+
+1. **Noise Prediction**: A U-Net is trained to predict the noise added at each timestep, learning a mapping $\epsilon_\theta(\text{mask}_t, t)$.
+
+2. **Stepwise Denoising**: Starting from $\text{mask}_T$, the model refines the mask by subtracting the predicted noise at each timestep, moving backward from $t = T$ to $t = 0$.
+
+3. **Final Reconstruction**: After $T$ steps, the output $\text{mask}_0$ approximates the original segmentation mask.
+
+<p align="center">
+   <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/diff_reverse.png" alt="Reverse Diffusion Process" height="150"/>
+</p>
+
+---
 
 ## 🎯 Results
 
-Our method demonstrates superior performance across multiple segmentation tasks, including brain tumor segmentation, optic cup segmentation, and thyroid nodule segmentation.
+MedSegDiff demonstrates superior performance across various medical image segmentation tasks, outperforming state-of-the-art methods by a significant margin.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/compare.png" alt="Evaluation Results" height="300"/>
   <br>
-  <i>Visual comparison of top general medical image segmentation methods.</i>
+  <i>Visual comparisons with other segmentation methods.</i>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/eval.png" alt="SOTA Comparison" height="300"/>
+  <img src="https://raw.githubusercontent.com/deepmancer/medseg-diffusion/main/images/eval.png" alt="Quantitative Results" height="300"/>
   <br>
-  <i>Comparison of MedSegDiff with state-of-the-art segmentation methods. The best results are highlighted in <b>bold</b>.</i>
+  <i>Quantitative results comparing MedSegDiff with state-of-the-art methods. Best results are highlighted in <b>bold</b>.</i>
 </p>
 
-## 🚀 Installation
+---
 
-To get started with MedSegDiff, follow these simple steps:
+## 🚀 Installation & Usage
+
+### Requirements
+
+- Python 3.8 or higher
+- PyTorch
+- Other dependencies as specified in [`requirements.txt`](requirements.txt)
+
+### Installation
+
+Clone the repository and install the required packages:
 
 ```bash
-git clone https://github.com/alirezaheidari-cs/DiffusionMedSeg.git
-cd DiffusionMedSeg
+git clone https://github.com/deepmancer/medseg-diffusion.git
+cd medseg-diffusion
 pip install -r requirements.txt
 ```
 
+### Quick Start
+
+- Explore [`MedSegDiff.ipynb`](MedSegDiff.ipynb) for a comprehensive, step-by-step notebook demonstration.
+- Adjust hyperparameters and diffusion steps as needed within the notebook.
+- To use your own datasets, modify the data loading sections accordingly.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+We extend our gratitude to the authors of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf) and other referenced works for their valuable research and insights that inspired this implementation.
+
+---
+
+## 🌟 Support the Project
+
+If you find **MedSegDiff** valuable for your research or projects, please consider starring ⭐ this repository on GitHub. Your support helps others discover this work!
+
+---
+
 ## 📚 Citations
 
-If you find this work helpful, please consider citing the following papers:
+If you utilize this repository, please consider citing the following works:
 
 ```bibtex
 @article{Wu2022MedSegDiffMI,
@@ -133,13 +224,3 @@ If you find this work helpful, please consider citing the following papers:
     year    = {2023}
 }
 ```
-
-## 📝 License
-
-This project is licensed under the MIT License. For detailed information, please refer to the [LICENSE](LICENSE) file.
-
----
-
-## ⭐ Support the Project
-
-If this project helps or inspires you, please give it a ⭐ on GitHub! Your support makes a difference.
