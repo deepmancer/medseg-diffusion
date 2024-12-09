@@ -13,7 +13,7 @@
 ---
 
 | **Source Code** | **Website** |
-|------------------|-------------|
+|:-----------------|:------------|
 | [github.com/deepmancer/medseg-diffusion](https://github.com/deepmancer/medseg-diffusion) | [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/) |
 
 ---
