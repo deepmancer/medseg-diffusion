@@ -14,7 +14,7 @@
 
 **Source Code**: [github.com/deepmancer/medseg-diffusion](https://github.com/deepmancer/medseg-diffusion)
 
-**Website**: [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/)
+**Website**:     [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/)
 
 ---
 
