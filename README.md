@@ -11,10 +11,7 @@
 **MedSegDiff** is a comprehensive PyTorch implementation of the [MedSegDiff paper](https://arxiv.org/pdf/2211.00611.pdf), presenting the first Diffusion Probabilistic Model (DPM) designed specifically for general medical image segmentation tasks. This repository aims to provide researchers and practitioners with a clear, step-by-step codebase and documentation to facilitate understanding and application of MedSegDiff across various medical imaging modalities.
 
 ---
-
-**Source Code**: [github.com/deepmancer/medseg-diffusion](https://github.com/deepmancer/medseg-diffusion)
-
-**Website**:     [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/)
+**Source Code**: [github.com/deepmancer/medseg-diffusion](https://github.com/deepmancer/medseg-diffusion) | **Website**: [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/)
 
 ---
 
