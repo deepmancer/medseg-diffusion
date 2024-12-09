@@ -12,6 +12,11 @@
 
 ---
 
+**Source Code**: [github.com/deepmancer/medseg-diffusion](https://github.com/deepmancer/medseg-diffusion)
+**Website**: [deepmancer.github.io/medseg-diffusion](https://deepmancer.github.io/medseg-diffusion/)
+
+---
+
 ## 🌟 Key Features
 
 - **General Medical Image Segmentation**: Tailored to handle diverse medical imaging tasks, including segmentation of brain tumors, optic cups, and thyroid nodules.
